@@ -82,6 +82,7 @@ protected:
 
 private:
     const CompilationMode m_compilationMode;
+public:
     const IndexOrName m_indexOrName;
 
 protected:

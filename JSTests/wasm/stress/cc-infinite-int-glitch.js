@@ -21,6 +21,8 @@ async function test() {
     const instance = await instantiate(wat, {}, { simd: true })
     const { test, test2 } = instance.exports
 
+    print(test(5));
+    print(test2(5));
     assert.eq(test(5), [5, 5])
     assert.eq(test2(5), [5, 5, 5])
 }
