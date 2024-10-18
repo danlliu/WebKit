@@ -172,8 +172,12 @@ enum class CallArgumentBytecode : uint8_t { // (mINT)
     ArgumentFPR = 0x8, // 0x08 - 0x0f: push into fa0, fa1, ...
     ArgumentStackAligned = 0x10, // 0x10: pop stack value, push onto stack[0]
     ArgumentStackUnaligned = 0x11, // 0x11: pop stack value, add another 16B for params, push onto stack[8]
-    StackAlign = 0x12, // 0x12: add another 16B for params
-    End = 0x13 // 0x13: stop
+    TailArgumentStackAligned = 0x12, // 0x12: pop stack value, push onto stack[0]
+    TailArgumentStackUnaligned = 0x13, // 0x13: pop stack value, add another 16B for params, push onto stack[8]
+    StackAlign = 0x14, // 0x14: add another 16B for params
+    TailStackAlign = 0x15, // 0x15: add another 16B for params
+    TailCall = 0x16, // 0x16: tail call
+    Call = 0x17 // 0x17: regular call
 };
 
 struct CallMetadata {
@@ -182,10 +186,25 @@ struct CallMetadata {
     CallArgumentBytecode argumentBytecode[0];
 };
 
+struct TailCallMetadata {
+    uint8_t length; // 1B for instruction length
+    Wasm::FunctionSpaceIndex functionIndex; // 4B for decoded index
+    int32_t callerStackArgSize; // 4B for caller stack size
+    CallArgumentBytecode argumentBytecode[0];
+};
+
 struct CallIndirectMetadata {
     uint8_t length; // 1B for length
     uint32_t tableIndex; // 4B for table index
     uint32_t typeIndex; // 4B for type index
+    CallArgumentBytecode argumentBytecode[0];
+};
+
+struct TailCallIndirectMetadata {
+    uint8_t length; // 1B for instruction length
+    uint32_t tableIndex; // 4B for table index
+    uint32_t typeIndex; // 4B for type index
+    int32_t callerStackArgSize; // 4B for caller stack size
     CallArgumentBytecode argumentBytecode[0];
 };
 
